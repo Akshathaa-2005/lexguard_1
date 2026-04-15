@@ -268,7 +268,6 @@ load_dotenv()
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from pipeline import LegalRAGPipeline
 from file_parser import extract_text
 from groq import Groq
 
@@ -315,11 +314,20 @@ def init_mongo():
 # -----------------------------
 _pipeline = None
 
-def get_pipeline() -> LegalRAGPipeline:
+def get_pipeline():
     global _pipeline
     if _pipeline is None:
         logger.info("Initializing RAG Pipeline...")
-        _pipeline = LegalRAGPipeline()
+        try:
+            # Lazy import keeps server bootable in constrained deployments.
+            from pipeline import LegalRAGPipeline
+            _pipeline = LegalRAGPipeline()
+        except Exception as e:
+            logger.error(f"RAG pipeline unavailable: {e}")
+            raise RuntimeError(
+                "RAG pipeline is unavailable in this deployment. "
+                "The /analyze and /policies endpoints require ML dependencies."
+            ) from e
     return _pipeline
 
 
