@@ -22,6 +22,8 @@ export default function ExplorePolicyPage() {
   const [isBrowsing, setIsBrowsing] = useState(false)
   const [browseError, setBrowseError] = useState('')
 
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000'
+
   const handleBrowse = async () => {
     if (!browseCountry && !browseDomain) {
       setBrowseError('Select at least a country or domain')
@@ -36,7 +38,7 @@ export default function ExplorePolicyPage() {
       const params: Record<string, string> = {}
       if (browseCountry) params.country = browseCountry
       if (browseDomain) params.domain = browseDomain
-      const res = await axios.get<{ documents?: PolicyBrowseItem[] }>('http://localhost:5000/policies', { params })
+      const res = await axios.get<{ documents?: PolicyBrowseItem[] }>(`${apiBaseUrl}/policies`, { params })
       setBrowseResults(res.data.documents || [])
       if ((res.data.documents || []).length === 0) {
         setBrowseError('No policies found for this selection')
@@ -55,7 +57,7 @@ export default function ExplorePolicyPage() {
 
   const downloadPolicy = async (documentId: string, policyName: string) => {
     try {
-      const response = await axios.get(`http://localhost:5000/policy/${documentId}`, {
+      const response = await axios.get(`${apiBaseUrl}/policy/${documentId}`, {
         responseType: 'blob',
       })
       const url = window.URL.createObjectURL(new Blob([response.data]))

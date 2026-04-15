@@ -21,6 +21,7 @@ export default function DashboardPage() {
   const [expandedPolicyId, setExpandedPolicyId] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000'
 
   const countries = ['Europe', 'Australia', 'USA', 'India']
   const domains = ['AI', 'Healthcare', 'Fintech', 'Crypto', 'Biotech', 'Consumer Apps', 'Insurance']
@@ -52,7 +53,7 @@ export default function DashboardPage() {
     setIsChatLoading(true)
 
     try {
-      const res = await axios.post('http://localhost:5000/chat', {
+      const res = await axios.post(`${apiBaseUrl}/chat`, {
         message: userMsg,
         context: legalReport || {},
         product_description: productDescription,
@@ -75,7 +76,7 @@ export default function DashboardPage() {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('http://localhost:5000/upload', formData)
+      const response = await axios.post(`${apiBaseUrl}/upload`, formData)
       setExtractedText(response.data.extracted_text)
       setProductDescription(response.data.extracted_text)
     } catch (err) {
@@ -94,7 +95,7 @@ export default function DashboardPage() {
     setError('')
 
     try {
-      const response = await axios.post('http://localhost:5000/analyze', {
+      const response = await axios.post(`${apiBaseUrl}/analyze`, {
         product_description: productDescription,
         country: selectedCountry,
         domain: selectedDomain,
@@ -121,7 +122,7 @@ Ask me anything about legal requirements or how to address risks.`,
 
   const downloadPolicy = async (documentId: string, policyName: string) => {
     try {
-      const response = await axios.get(`http://localhost:5000/policy/${documentId}`, {
+      const response = await axios.get(`${apiBaseUrl}/policy/${documentId}`, {
         responseType: 'blob',
       })
 
