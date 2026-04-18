@@ -29,10 +29,11 @@ class LegalRAGPipeline:
     def __init__(self):
 
         logger.info("Initializing Legal RAG Pipeline...")
-
+        
         # Shared Groq client
+        logger.info(os.getenv("GROQ_API_KEY")+"     asdasdasd")
         groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-
+        logger.info("Groq client initialized")
         judge_model    = os.getenv("GROQ_JUDGE_MODEL",  "llama-3.1-8b-instant")
         analysis_model = os.getenv("GROQ_KIWI_MODEL",   "llama-3.3-70b-versatile")
 

@@ -1,9 +1,10 @@
 flask==3.0.0
 flask-cors==4.0.0
-groq==0.11.0
+groq>=0.12.0
 pymongo==4.6.1
 psycopg2-binary==2.9.9
 numpy==1.26.4
+scipy
 torch>=2.1.1
 transformers>=4.37.0
 python-dotenv==1.0.0

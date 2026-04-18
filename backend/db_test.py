@@ -12,7 +12,7 @@ PASSWORD = os.getenv("SUPABASE_PASSWORD")
 PORT = int(os.getenv("SUPABASE_PORT", 5432))
 
 try:
-    print("🔄 Connecting to database...")
+    print("Connecting to database...")
 
     conn = psycopg2.connect(
         host=HOST,
@@ -20,15 +20,15 @@ try:
         user=USER,
         password=PASSWORD,
         port=PORT,
-        sslmode="require"   # ⚠️ Required for Supabase
+        sslmode="require"   #  Required for Supabase
     )
 
     cursor = conn.cursor()
-    print("✅ Connection successful!")
+    print("Connection successful!")
 
     # Test query
     cursor.execute("SELECT version();")
-    print("📦 PostgreSQL version:", cursor.fetchone())
+    print("PostgreSQL version:", cursor.fetchone())
 
     # List tables
     cursor.execute("""
@@ -38,14 +38,14 @@ try:
     """)
 
     tables = cursor.fetchall()
-    print("\n📋 Tables:")
+    print("\nTables:")
     for t in tables:
         print("-", t[0])
 
     cursor.close()
     conn.close()
-    print("\n🔒 Connection closed.")
+    print("\nConnection closed.")
 
 except Exception as e:
-    print("❌ Connection failed!")
+    print("Connection failed!")
     print("Error:", e)
