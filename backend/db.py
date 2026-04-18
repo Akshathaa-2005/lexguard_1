@@ -12,18 +12,29 @@ class Database:
     def __init__(self):
 
         try:
+            host = os.getenv("SUPABASE_HOST")
+            db = os.getenv("SUPABASE_DB")
+            user = os.getenv("SUPABASE_USER")
+            password = os.getenv("SUPABASE_PASSWORD")
+            port = os.getenv("SUPABASE_PORT")
+            
+            logger.info(f"Attempting PostgreSQL connection: host={host}, db={db}, user={user}, port={port}")
+            
             self.conn = psycopg2.connect(
-                host=os.getenv("SUPABASE_HOST"),
-                database=os.getenv("SUPABASE_DB"),
-                user=os.getenv("SUPABASE_USER"),
-                password=os.getenv("SUPABASE_PASSWORD"),
-                port=os.getenv("SUPABASE_PORT"),
+                host=host,
+                database=db,
+                user=user,
+                password=password,
+                port=port,
             )
             self.cursor = self.conn.cursor()
             logger.info("PostgreSQL connection established")
 
         except Exception as e:
-            logger.error(f"PostgreSQL connection failed: {e}")
+            logger.error(f"PostgreSQL connection failed: {type(e).__name__}: {e}")
+            logger.error(f"Connection details - host={os.getenv('SUPABASE_HOST')}, db={os.getenv('SUPABASE_DB')}, user={os.getenv('SUPABASE_USER')}, port={os.getenv('SUPABASE_PORT')}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             self.conn = None
             self.cursor = None
 

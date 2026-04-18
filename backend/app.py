@@ -376,6 +376,40 @@ def health():
     })
 
 
+# Database Health Check (diagnostic)
+# -----------------------------
+@app.route("/db-health", methods=["GET"])
+def db_health():
+    try:
+        pipeline = get_pipeline()
+        if pipeline.db.is_connected():
+            return jsonify({
+                "status": "connected",
+                "message": "PostgreSQL database is accessible"
+            }), 200
+        else:
+            return jsonify({
+                "status": "disconnected",
+                "message": "PostgreSQL database connection failed",
+                "host": os.getenv("SUPABASE_HOST"),
+                "port": os.getenv("SUPABASE_PORT"),
+                "database": os.getenv("SUPABASE_DB"),
+                "user": os.getenv("SUPABASE_USER"),
+            }), 503
+    except Exception as e:
+        logger.error(f"/db-health check failed: {e}")
+        import traceback
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "traceback": traceback.format_exc(),
+            "host": os.getenv("SUPABASE_HOST"),
+            "port": os.getenv("SUPABASE_PORT"),
+            "database": os.getenv("SUPABASE_DB"),
+            "user": os.getenv("SUPABASE_USER"),
+        }), 503
+
+
 # -----------------------------
 # POST /analyze
 # -----------------------------
