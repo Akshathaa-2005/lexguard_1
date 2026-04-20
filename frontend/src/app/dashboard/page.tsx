@@ -61,7 +61,7 @@ export default function DashboardPage() {
       })
       setChatMessages(prev => [...prev, { role: 'assistant', content: res.data.reply }])
     } catch {
-      setChatMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
+      setChatMessages(prev => [...prev, { role: 'assistant', content: 'Please upload or enter your product description first so I can assist you better.' }])
     } finally {
       setIsChatLoading(false)
     }
@@ -80,14 +80,14 @@ export default function DashboardPage() {
       setExtractedText(response.data.extracted_text)
       setProductDescription(response.data.extracted_text)
     } catch (err) {
-      setError('Failed to extract text from file')
+      setError('We could not read your file. Please upload a valid PDF or DOCX document and try again.')
       console.error(err)
     }
   }
 
   const handleAnalyze = async () => {
     if (!productDescription.trim()) {
-      setError('Please provide a product description')
+      setError('Please enter your product or project description before starting the analysis.')
       return
     }
 
@@ -113,7 +113,7 @@ Ask me anything about legal requirements or how to address risks.`,
         },
       ])
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Analysis failed')
+      setError(err.response?.data?.error || 'We were unable to complete the legal analysis right now. Please try again in a few moments.')
       console.error(err)
     } finally {
       setIsAnalyzing(false)
